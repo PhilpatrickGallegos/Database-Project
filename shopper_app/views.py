@@ -1,4 +1,6 @@
 import json
+from geopy import distance
+from geopy import Nominatim
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 
@@ -9,6 +11,8 @@ from django import forms
 from django.views import generic 
 
 from .models import Item, GeoLoc, ItemLocation
+
+geoloc = Nominatim(user_agent = "GeoLocArea")
 
 # (e.g., HOME_LOC['latitude'] or HOME_LOC['longitude'])
 HOME_LOC = settings.DEFAULT_LOC 
@@ -51,10 +55,17 @@ class SearchForm(forms.Form):
 class SelectItemsView(generic.TemplateView):
     template_name = 'shop.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(SelectItemsView, self).get_context_data(**kwargs)
+        context['items'] = Item.objects.all()
+
+        return context
+
 
 
 # REST API # 
 class ItemsResultsRestView(generic.View):
+    
     """RESTful api to access item database.
     /shop/rest/ takes post data and returns json response containing
     item objects that are within minimal distance to a default location.
@@ -104,6 +115,24 @@ class ItemsResultsRestView(generic.View):
                 item_objects.append(item_obj)
         
             #  Begin here to determine optimal item location for each item in item_objects list
+
+            currentLoc = (HOME_LOC['latitude'],HOME_LOC['longitude'])
+            for item in item_objects:
+                locList = item.locations.all()
+                distList = []
+                for i in locList:
+                    loc = (i.location.lat, i.location.lon)
+                    distList.append(distance.distance(loc, currentLoc).miles)
+                minDist = min(distList)
+                closest = locList[distList.index(minDist)]
+
+                data['items'].append({'name':closest.item.name, 'price':closest.item.price, 'lat':closest.location.lat, 'lon':closest.location.lon })
+                data['miles'] += minDist
+                data['cost'] += closest.item.price
+
+                print(data)
+
+
 
 
             # End local edits here.

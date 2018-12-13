@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from geopy import Nominatim
 # (e.g., HOME_LOC['latitude'] or HOME_LOC['longitude'])
 HOME_LOC = settings.DEFAULT_LOC
 
@@ -27,6 +28,11 @@ class ItemLocation(models.Model):
     """
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='locations')
     location = models.ForeignKey(GeoLoc, on_delete=models.CASCADE, related_name='items')
+    def calc_distance_to_origin(self):
+        d = distance.distance
+        g = Nominatim(user_agent="class_project")
+        i = g.geocode(locations)
+
 
     class Meta:
         unique_together = (('location', 'item'),)
