@@ -1,16 +1,4 @@
-# cs463 Final Project Starter Code
 
-## Overview
-For this final assignment you will modify an existing Django web application by implementing backend application logic and frontend display and manipulation. The existing web application is based on the [shopping list](https://github.com/rmedinahu/cs463-django-sl-01) project we have been looking at for the last half of the semester. For the current extension, you will implement a page that shows selected items by the user that are within a minimal distance from Las Vegas NM (the origin). Items in the db are mapped to locations such that any given item can be located in 1 or more locations. The goal is to retrieve locations of items that are closest to the origin. In addition, these minimal locations are to be plotted (marked) in a map on the client browser. The following tasks will help you break down the necessary modifications to achieve the intended result.
-
-## Submission
-
-### Due in your repository by Friday Dec 14 by 11:59p. (I will clone/download whatever state your code is in at that time).
-Be sure that you are consistently adding, committing, and pushing your changes to your github repo.
-
-## Tasks
-
-### Project Setup
 
 * Create a virtual enviroment for this project on your development machine and make sure it is activated. (**Python 3 required**)
 
